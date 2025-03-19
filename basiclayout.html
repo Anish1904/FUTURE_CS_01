@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Security Scanner</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+        input, button { padding: 10px; margin: 10px; width: 300px; }
+        #output { margin-top: 20px; white-space: pre-wrap; text-align: left; max-width: 600px; margin: auto; }
+    </style>
+</head>
+<body>
+
+    <h2>Web Security Scanner</h2>
+    <input type="text" id="url" placeholder="Enter website URL">
+    <button onclick="startScan()">Start Scan</button>
+
+    <h3>Scan Results:</h3>
+    <pre id="output">Results will appear here...</pre>
+
+    <script>
+        function startScan() {
+            let url = document.getElementById("url").value;
+            if (!url) {
+                alert("Please enter a valid URL!");
+                return;
+            }
+
+            document.getElementById("output").innerText = "Scanning... Please wait.";
+
+            fetch('/scan', {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ url: url })
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("output").innerText = data;
+            })
+            .catch(error => {
+                document.getElementById("output").innerText = "Error running the scan.";
+                console.error("Error:", error);
+            });
+        }
+    </script>
+
+</body>
+</html>
